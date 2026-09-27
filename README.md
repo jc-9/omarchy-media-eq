@@ -1,8 +1,11 @@
 # Media EQ Panel for Omarchy
 
 An MPRIS now-playing bar widget + control panel for Omarchy's Quickshell
-desktop. Works with Spotify and any player exposing the standard Linux
-MPRIS interface. No polling scripts, no `playerctl` dependency.
+desktop. Works with **Spotify** and any player exposing the standard Linux
+MPRIS interface. No polling scripts, no `playerctl` dependency — everything
+is read live from D-Bus.
+
+![Control panel with playback buttons, animated equalizer, and volume slider](screenshot-panel.png)
 
 Cloned from Omarchy's stock `omarchy.media` widget, with two additions
 the stock widget lacks:
@@ -13,18 +16,26 @@ the stock widget lacks:
   while music plays, freezes while paused.
 
 Everything else is stock behavior: scrolling `track · artist` label,
-left-click = play/pause, middle-click = next, scroll = prev/next,
+left-click = play/pause, middle-click = next, scroll wheel = prev/next,
 right-click = control panel with album art, ⏮ ▶/⏭ buttons, and
-multi-source switching.
+multi-source switching when several players are active.
+
+## Requirements
+
+- Omarchy (Quickshell-based shell)
+- A player exposing MPRIS (e.g. the Spotify desktop client, open and
+  playing — the widget hides when no track metadata is available)
+- A Nerd Font (ships with Omarchy) for the control glyphs
 
 ## Install
 
 ```bash
-omarchy plugin add https://github.com/<you>/omarchy-media-eq.git --enable
+omarchy plugin add https://github.com/jc-9/omarchy-media-eq.git --enable
 ```
 
 Enabling replaces the built-in `omarchy.media` widget (same mechanism as
-`omarchy plugin clone`). Add it to the bar if it isn't placed automatically:
+`omarchy plugin clone`). If the widget isn't placed automatically, add it
+to the bar:
 
 ```bash
 omarchy bar move justin.media --section center
@@ -33,21 +44,24 @@ omarchy bar move justin.media --section center
 ## Usage
 
 - The widget appears in the bar whenever a player exposes track metadata.
-- Right-click the track label to open the panel with controls, volume,
-  and equalizer.
+- Hover the label for the full `title — artist` tooltip.
+- Right-click the track label to open the panel: playback controls,
+  volume slider, and equalizer.
 
-## Tweaks
+## Configuration
 
-In `BarWidget.qml`, `eqRow` block:
+In `BarWidget.qml`:
 
-| Setting            | Effect                    |
-|--------------------|---------------------------|
-| bar count (`28`)   | number of EQ bars         |
-| `interval: 130`    | EQ animation speed (ms)   |
-| `height: ... (36)` | EQ strip height           |
-| `maxLabelWidth`    | scrolling label max width |
+| Location              | Setting            | Effect                      |
+|-----------------------|--------------------|-----------------------------|
+| `eqRow` block         | bar count (`28`)   | number of equalizer bars    |
+| `eqRow` Timer         | `interval: 130`    | EQ animation speed (ms)     |
+| `eqRow`               | `height: ...(36)`  | EQ strip height             |
+| volume `PanelSlider`  | `step: 0.05`       | volume slider granularity   |
+| root properties       | `maxLabelWidth`    | scrolling label max width   |
 
-In the volume row: `step: 0.05` controls slider granularity.
+The equalizer timer runs only while music is playing **and** the panel is
+open, so it costs nothing otherwise.
 
 ## Validate
 
