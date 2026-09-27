@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "id": "justin.media",
+  "name": "Media EQ Panel",
+  "version": "1.1.0",
+  "author": "Omarchy",
+  "description": "MPRIS media control service with player volume slider and animated equalizer",
+  "kinds": [
+    "service",
+    "bar-widget"
+  ],
+  "keepLoaded": true,
+  "entryPoints": {
+    "service": "Service.qml",
+    "barWidget": "BarWidget.qml"
+  },
+  "barWidget": {
+    "displayName": "Media EQ Panel",
+    "description": "MPRIS now-playing with playback controls, volume slider, and animated equalizer",
+    "category": "Media",
+    "allowMultiple": false
+  },
+  "omarchy": {
+    "clonedFrom": "omarchy.media"
+  }
+}
